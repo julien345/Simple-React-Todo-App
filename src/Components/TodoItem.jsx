@@ -1,9 +1,10 @@
-function TodoItem({item,deleteTodo,toggleTodo,editTask}){
+function TodoItem({item,deleteTodo,toggleTodo,editTodo}){
     
+ // function to handle edit button click   
 const handleEdit = () => {
     const newText = prompt("Modifier la tâche");
     if (!newText) return;
-    editTask(item.id, newText);
+    editTodo(item.id, newText);
   };
     //function to render a single todo item
 

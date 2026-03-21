@@ -1,4 +1,4 @@
-function Filter({filter, setFilter}){
+function Filter({setFilter}){
 return(
 
 <div>
