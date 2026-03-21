@@ -17,13 +17,26 @@ useEffect(() => {
 
 // fonction to add a new todo
 
-const addTodo=(item)=>{
+const addTodo=(text)=>{
+  const item={
+    id: Date.now(),
+    tache:text,
+    completed:false
+  }
   setTodos(
     (prev)=>{
       return [...prev,item]
     }
   )
 }
+// Modifier une tâche
+  const editTask = (id, newText) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, tache: newText } : todo
+      )
+    );
+  };
 // function to delete a todo
 
 const deleteTodo=(id)=>{
@@ -64,6 +77,7 @@ return(
     todos={filteredTodos} 
     deleteTodo={deleteTodo}
     toggleTodo={toggleTodo}
+    editTask={editTask}
     />
  
   </div>

@@ -1,5 +1,5 @@
 import TodoItem from "./TodoItem";
-function TodoList({todos,deleteTodo,toggleTodo}){
+function TodoList({todos,deleteTodo,toggleTodo,editTask}){
     return (
         todos.map((item) => (
             <ul>
@@ -8,6 +8,7 @@ function TodoList({todos,deleteTodo,toggleTodo}){
             item={item} 
             deleteTodo={deleteTodo} 
             toggleTodo={toggleTodo}
+            editTask={editTask}
             />
             </ul>
         ))

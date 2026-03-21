@@ -9,12 +9,7 @@ function AddTodo({addTodo}){
             alert('veuillez entrer du texte');
             return
         }
-        const newItem={
-            id:Date.now(),
-            tache:text,
-            completed:false
-                    }
-        addTodo(newItem);
+        addTodo(text);
         setText('');
         
     }
