@@ -1,73 +1,67 @@
-import { useState,useEffect} from "react";
-import AddTodo from "./Components/AddTodo";
-import TodoList from "./Components/TodoList";
-import Filter from "./Components/Filter";
+import React from 'react';
+import {useState} from 'react'
+import AddForm from './components/AddForm';
+import Filter from './components/Filter';
+import ItemList from './components/ItemList';
 
-function App(){
-// state for todos
+function App() {
+// create empty array of tasks
+const [tasks,setTaks]=useState([]);
 
-const [todos,setTodos] = useState(()=>{
-  const savedTodos = localStorage.getItem("todos");
-  return savedTodos ? JSON.parse(savedTodos) : [];
-})
-
-useEffect(() => {
-  localStorage.setItem("todos", JSON.stringify(todos));
-}, [todos]);
-
-// fonction to add a new todo
-
-const addTodo=(item)=>{
-  setTodos(
-    (prev)=>{
-      return [...prev,item]
-    }
-  )
+// function to add a task to the array of tasks
+function AddTask(task){
+const newTask={
+  id:Date.now(),
+  task:task,
+  completed:false
 }
-// function to delete a todo
+setTaks(prev=>[...prev,newTask])
 
-const deleteTodo=(id)=>{
-    setTodos((prev)=>{
-     return  prev.filter((todo)=> todo.id!==id)
-    })
-  }
-
-  //function to toggle completed status of a todo
-  const toggleTodo = (id)=>{
-  setTodos(prev =>
-    prev.map(todo =>
-      todo.id === id
-        ? {...todo, completed: !todo.completed}
-        : todo
+}
+//function to toggle the completed status of a task
+const toggleTask = (id)=>{
+  setTaks(prev =>
+    prev.map(task=>
+      task.id === id
+        ? {...task, completed: !task.completed}
+        : task
     )
   )
 }
-// function to filter todos based on status
-const [filter,setFilter] = useState("all")
-const filteredTodos = todos.filter(todo => {
-  if(filter === "active") return !todo.completed
-  if(filter === "completed") return todo.completed
-  return true
-})
 
-// render
-return(
-  <div>
 
-    <h1>Todo List</h1>
-    {/* component for adding a new todo */}
-    <AddTodo addTodo={addTodo}/>
 
-     <Filter filter={filter} setFilter={setFilter} />
-    {/* component for displaying the list of todos */}
-    <TodoList 
-    todos={filteredTodos} 
-    deleteTodo={deleteTodo}
-    toggleTodo={toggleTodo}
-    />
- 
-  </div>
-)
+
+
+
+
+return (
+    // Le conteneur principal remplace le <body> avec la classe bg-blue-400
+    <div className="min-h-screen font-sans bg-blue-400 flex justify-center pt-20">
+
+      <div className="w-3/4 max-w-4xl rounded-xl bg-white p-6 shadow-lg flex flex-col items-center h-fit">
+
+        {/* Title */}
+        <h1 className="text-center mb-10 font-semibold leading-tight tracking-tighter text-gray-900 md:text-6xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+          Simple Todo List APP
+        </h1>
+
+        {/* 🔥 CONTENEUR COMMUN */}
+        <div className="w-full max-w-md">
+
+          {/* text field and add button */}
+          <AddForm AddTask={AddTask}/>
+
+          {/* Tasks Status Filters */}
+          <Filter />
+
+          {/* Tasks Display Container */}
+          <ItemList tasks={tasks} toggleTask={toggleTask}/>
+          {/* End of tasks display */}
+
+        </div>
+      </div>
+    </div>
+  );
 }
-
-export default App
+export default App;
