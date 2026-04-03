@@ -1,12 +1,19 @@
-import React from 'react';
-import {useState} from 'react'
+import {useState,useEffect} from 'react'
 import AddForm from './components/AddForm';
 import Filter from './components/Filter';
 import ItemList from './components/ItemList';
 
 function App() {
 // create empty array of tasks
-const [tasks,setTaks]=useState([]);
+const [tasks,setTasks]=useState(()=>{
+    const savedTasks=localStorage.getItem("tasks");
+    return savedTasks ? JSON.parse(savedTasks) : [];
+})
+
+// useEffect to save tasks to localStorage whenever tasks change
+useEffect(()=>{
+  localStorage.setItem("tasks",JSON.stringify(tasks))
+},[tasks]);
 
 // function to add a task to the array of tasks
 function AddTask(task){
@@ -15,12 +22,12 @@ const newTask={
   task:task,
   completed:false
 }
-setTaks(prev=>[...prev,newTask])
+setTasks(prev=>[...prev,newTask])
 
 }
 //function to toggle the completed status of a task
 const toggleTask = (id)=>{
-  setTaks(prev =>
+  setTasks(prev =>
     prev.map(task=>
       task.id === id
         ? {...task, completed: !task.completed}
@@ -29,11 +36,28 @@ const toggleTask = (id)=>{
   )
 }
 
+// function to delete a task from the array of tasks
+const deleteTask = (id)=>{
+  setTasks(prev => prev.filter(task => task.id !== id))
+}
 
+// function to update a task in the array of tasks
+const updateTask = (id, newTask)=>{
+  setTasks(prev => prev.map(task => task.id === id ? {...task, task: newTask} : task))
+}
+// state to keep track of the current filter status
+const [filterStatus,setFilterStatus]=useState("all")
 
-
-
-
+// function to filter tasks based on their completed status
+const filterTasks=tasks.filter(task=>{
+  if(filterStatus==="active"){
+    return !task.completed
+  }
+  if(filterStatus==="completed"){
+    return task.completed
+  }
+  return true
+})
 
 return (
     // Le conteneur principal remplace le <body> avec la classe bg-blue-400
@@ -53,10 +77,15 @@ return (
           <AddForm AddTask={AddTask}/>
 
           {/* Tasks Status Filters */}
-          <Filter />
+          <Filter setFilterStatus={setFilterStatus}/>
 
           {/* Tasks Display Container */}
-          <ItemList tasks={tasks} toggleTask={toggleTask}/>
+          <ItemList 
+          tasks={filterTasks} 
+          toggleTask={toggleTask} 
+          deleteTask={deleteTask} 
+          updateTask={updateTask}
+          />
           {/* End of tasks display */}
 
         </div>
